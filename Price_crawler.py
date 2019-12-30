@@ -7,14 +7,15 @@ import json
 
 s = sched.scheduler(TI.time, TI.sleep)
 
-def tableColor(val):
-    if val > 0:
-        color = 'red'
-    elif val < 0:
-        color = 'green'
-    else:
-        color = 'white'
-    return 'color: %s' % color
+def Repeat_Call(query_url):
+    print('connect error')
+    TI.sleep(4)
+    try:
+        data = json.loads(urlopen(query_url).read().decode('utf-8'))
+    except:
+        data = Repeat_Call(query_url)
+    return data
+    
 
 def stock_price_crawler(targets):    
 #    clear_output(wait=True)  
@@ -30,11 +31,12 @@ def stock_price_crawler(targets):
    
     price = {}
     price['Update_Time'] = update_time 
+    Fail_list = []
     for i in range(len(targets)):
         if 'z' in data['msgArray'][i]:
             price[targets[i]] = float(data['msgArray'][i]['z'])
         else:
-            print(targets[i])
+            Fail_list.append(targets[i])
     '''
     start_time = datetime.datetime.strptime(str(time.date())+'9:30', '%Y-%m-%d%H:%M')
     end_time =  datetime.datetime.strptime(str(time.date())+'13:30', '%Y-%m-%d%H:%M')
@@ -43,7 +45,7 @@ def stock_price_crawler(targets):
     if time >= start_time and time <= end_time:
         s.enter(1, 0, stock_crawler, argument=(targets,))
     '''
-    return price
+    return price, Fail_list
 
 def stock_change_crawler(targets):    
 #    clear_output(wait=True)  
@@ -54,10 +56,8 @@ def stock_change_crawler(targets):
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
-    except Exception as e:
-        print('Connect error:',e)
-        TI.sleep(4)        
-        data = json.loads(urlopen(query_url).read().decode('utf-8'))
+    except:                
+        data = Repeat_Call(query_url)
 
     # 紀錄更新時間
     time = datetime.datetime.now()  

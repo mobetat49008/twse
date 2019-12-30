@@ -5,9 +5,7 @@ import sched
 import Line_test
 import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.interval import IntervalTrigger
-import atexit
-#import MarketValue_from_FinMind as MV
+
 s = sched.scheduler(time.time, time.sleep)
 token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx'
 token2 = 'Vr5QUop64kp7JXpTQdAyr2dqzrnyraREB5vsg3CCxUR'
@@ -95,11 +93,11 @@ def process(stock_list, weight,twseopen):
     PreIndex = Index + Premarket
     
     if abs(last_PreIndex - PreIndex)>1:
-        msg = '\n[Dylan]試搓指數:'+ str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
+        msg = '\n試搓指數:'+ str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
         Line_test.lineNotifyMessage(token, msg)
         last_PreIndex = PreIndex
     else:
-        msg = '\n[Dylan]試搓指數:'+ str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
+        msg = '\n試搓指數:'+ str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
         Line_test.lineNotifyMessage(token2, msg)
     
     
@@ -113,17 +111,21 @@ def process(stock_list, weight,twseopen):
         
     if now_time >= start_time and now_time <= end_time:
         s.enter(1, 0, process, argument=(stock_list,weight,twseopen))
+        s.run()
         
     return 'Finish'
 
 def EveryDay_Update(stock_list):
     
     stock_list.append('t00')
-    Price = Get_Price(stock_list)
+    Price, Fail_list = Get_Price(stock_list)
     '''
     To do:
         沒撈到的股票要重撈昨日收盤價
     '''
+    for item in Fail_list:
+        Price[item] = float(input(item + ':'))
+        
     Shared = Load_shared('shared.txt')
     Weight = Calculate_Weight(Price,Shared)
     Record_Json(Weight, 'Weight.json')
@@ -131,6 +133,8 @@ def EveryDay_Update(stock_list):
     Index_dict['Index'] = Price['t00']
     Index_dict['Time'] = str(datetime.datetime.now().date())
     Record_Json(Index_dict, 'Index.json')
+    
+
     
 def Reload_parameter():
     global stock_list, Weight, Index, last_PreIndex
@@ -142,38 +146,20 @@ def Reload_parameter():
 
 
 if __name__ == '__main__': 
-    stock_list = Load_Stock_List('Stock_list.txt')
-    
-    #stock_list.append('t00')
-    #Price = Get_Price(stock_list)
-    #Shared = Load_shared('shared.txt')
-    '''
-    Weight = Calculate_Weight(Price,Shared)
-    Record_Json(Weight, 'Weight.json')
-    Index_dict = {}
-    Index_dict['Index'] = Price['t00']
-    Index_dict['Time'] = str(datetime.datetime.now().date())
-    Record_Json(Index_dict, 'Index.json')
-    '''
 
-    #Weight = Read_Json('Weight.json')
-    #Index_dict = Read_Json('Index.json')
-    #Index = Index_dict['Index']
-    #print(Index)
+    Reload_parameter()
 
-    #s.enter(1, 0, process, argument=(stock_list,Weight))
-    #s.run()
     
     scheduler = BackgroundScheduler()  
     scheduler.add_job(Reload_parameter, trigger='cron', day_of_week='mon-fri', hour='08', minute="00", second="0",id='my_job_id',misfire_grace_time=30)
     scheduler.start()
 
     scheduler = BackgroundScheduler()  
-    scheduler.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id',misfire_grace_time=30)
+    scheduler.add_job(process, args=(stock_list,Weight,1), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id',misfire_grace_time=30)
     scheduler.start()
     
     scheduler1 = BackgroundScheduler()  
-    scheduler1.add_job(process, args=(stock_list,Weight,1), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_1',misfire_grace_time=30)
+    scheduler1.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_1',misfire_grace_time=30)
     scheduler1.start()
     
     while(1):
