@@ -27,13 +27,14 @@ def Load_Stock_List(list_file):
 
 def Get_Price(stock_list):
     price = {}
-    
+    Fail_list = []
     for i in range(len(stock_list)//urlsplitlength +1):
         small_stock_list = stock_list[i*urlsplitlength:min(len(stock_list),(i+1)*urlsplitlength)]
-        small_price = Pc.stock_price_crawler(small_stock_list)
+        small_price, small_Fail = Pc.stock_price_crawler(small_stock_list)
         price = {**price, **small_price}
+        Fail_list = Fail_list + small_Fail
     
-    return price
+    return price, Fail_list
 
 def Get_change(stock_list):
     change = {}
