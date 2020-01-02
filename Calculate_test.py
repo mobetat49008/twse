@@ -113,6 +113,9 @@ def process(stock_list, weight,twseopen):
     if now_time >= start_time and now_time <= end_time:
         s.enter(1, 0, process, argument=(stock_list,weight,twseopen))
         s.run()
+    
+    if now_time == datetime.datetime.strptime(str(now_time.date())+'13:35', '%Y-%m-%d%H:%M'):
+        TWSE_Update()
         
     return 'Finish'
 
@@ -144,7 +147,13 @@ def Reload_parameter():
     Index_dict = Read_Json('Index.json')
     Index = Index_dict['Index']
     last_PreIndex = Index
-
+    
+def TWSE_Update():
+    twse_close = Pc.stock_price_crawler(['t00'])
+    Index_dict = {}
+    Index_dict['Index'] = twse_close [0]['t00']
+    Index_dict['Time'] = str(datetime.datetime.now().date())
+    Record_Json(Index_dict, 'Index.json')
 
 if __name__ == '__main__': 
 
@@ -162,7 +171,7 @@ if __name__ == '__main__':
     scheduler1 = BackgroundScheduler()  
     scheduler1.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_1',misfire_grace_time=30)
     scheduler1.start()
-    
+            
     while(1):
         #毫無意義#
         i = 0 
