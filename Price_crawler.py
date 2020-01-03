@@ -8,7 +8,7 @@ import json
 s = sched.scheduler(TI.time, TI.sleep)
 
 def Repeat_Call(query_url):
-    print('connect error')
+    
     TI.sleep(4)
     try:
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
@@ -56,7 +56,8 @@ def stock_change_crawler(targets):
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
-    except:                
+    except Exception as e:   
+        print('connect error - msg:',e)    
         data = Repeat_Call(query_url)
 
     # 紀錄更新時間

@@ -10,7 +10,6 @@ s = sched.scheduler(time.time, time.sleep)
 token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx'
 token2 = 'Vr5QUop64kp7JXpTQdAyr2dqzrnyraREB5vsg3CCxUR'
 
-
 urlsplitlength = 166
 stock_list=None 
 Weight=None 
@@ -113,9 +112,6 @@ def process(stock_list, weight,twseopen):
     if now_time >= start_time and now_time <= end_time:
         s.enter(1, 0, process, argument=(stock_list,weight,twseopen))
         s.run()
-    
-    if now_time == datetime.datetime.strptime(str(now_time.date())+'13:35', '%Y-%m-%d%H:%M'):
-        TWSE_Update()
         
     return 'Finish'
 
@@ -137,8 +133,6 @@ def EveryDay_Update(stock_list):
     Index_dict['Index'] = Price['t00']
     Index_dict['Time'] = str(datetime.datetime.now().date())
     Record_Json(Index_dict, 'Index.json')
-    
-
     
 def Reload_parameter():
     global stock_list, Weight, Index, last_PreIndex
@@ -163,13 +157,17 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler()  
     scheduler.add_job(Reload_parameter, trigger='cron', day_of_week='mon-fri', hour='08', minute="00", second="0",id='my_job_id',misfire_grace_time=30)
     scheduler.start()
+    
+    scheduler = BackgroundScheduler()  
+    scheduler.add_job(TWSE_Update, trigger='cron', day_of_week='mon-fri', hour='13', minute="35", second="0",id='my_job_id_1',misfire_grace_time=30)
+    scheduler.start()
 
     scheduler = BackgroundScheduler()  
-    scheduler.add_job(process, args=(stock_list,Weight,1), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id',misfire_grace_time=30)
+    scheduler.add_job(process, args=(stock_list,Weight,1), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id_2',misfire_grace_time=30)
     scheduler.start()
     
     scheduler1 = BackgroundScheduler()  
-    scheduler1.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_1',misfire_grace_time=30)
+    scheduler1.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_3',misfire_grace_time=30)
     scheduler1.start()
             
     while(1):
