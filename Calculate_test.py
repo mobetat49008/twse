@@ -5,6 +5,7 @@ import sched
 import Line_test
 import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+import goodinfo
 
 s = sched.scheduler(time.time, time.sleep)
 token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx'
@@ -115,16 +116,16 @@ def process(stock_list, weight,twseopen):
         
     return 'Finish'
 
-def EveryDay_Update(stock_list):
+def EveryDay_Update():
+    global stock_list
+    stock_list = Load_Stock_List('Stock_list.txt')
     
     stock_list.append('t00')
     Price, Fail_list = Get_Price(stock_list)
-    '''
-    To do:
-        沒撈到的股票要重撈昨日收盤價
-    '''
+
     for item in Fail_list:
-        Price[item] = float(input(item + ':'))
+        Price[item] = goodinfo.Get_PreClose(item)
+        #print(item, Price[item])
         
     Shared = Load_shared('shared.txt')
     Weight = Calculate_Weight(Price,Shared)
@@ -159,7 +160,7 @@ if __name__ == '__main__':
     scheduler.start()
     
     scheduler = BackgroundScheduler()  
-    scheduler.add_job(TWSE_Update, trigger='cron', day_of_week='mon-fri', hour='13', minute="35", second="0",id='my_job_id_1',misfire_grace_time=30)
+    scheduler.add_job(EveryDay_Update, trigger='cron', day_of_week='mon-fri', hour='21', minute="00", second="0",id='my_job_id_1',misfire_grace_time=30)
     scheduler.start()
 
     scheduler = BackgroundScheduler()  
