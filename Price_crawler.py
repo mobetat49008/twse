@@ -27,7 +27,7 @@ def stock_price_crawler(targets):
     try:
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
     except Exception as e:   
-        print('connect error - msg:',e)    
+        print('price connect error - msg:',e)    
         data = Repeat_Call(query_url) 
     # 紀錄更新時間
     time = datetime.datetime.now()  
@@ -61,7 +61,7 @@ def stock_change_crawler(targets):
     try:
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
     except Exception as e:   
-        print('connect error - msg:',e)    
+        print('change connect error - msg:',e)    
         data = Repeat_Call(query_url)
 
     # 紀錄更新時間
