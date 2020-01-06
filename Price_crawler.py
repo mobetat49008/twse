@@ -24,7 +24,11 @@ def stock_price_crawler(targets):
     #stock_list = stock_list + '|'.join('otc_{}.tw'.format(target) for target in targets)     
     #　query data
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
-    data = json.loads(urlopen(query_url).read().decode('utf-8'))   
+    try:
+        data = json.loads(urlopen(query_url).read().decode('utf-8'))
+    except Exception as e:   
+        print('connect error - msg:',e)    
+        data = Repeat_Call(query_url) 
     # 紀錄更新時間
     time = datetime.datetime.now()  
     update_time = str(time.hour)+":"+str(time.minute)+":"+str(time.second)
