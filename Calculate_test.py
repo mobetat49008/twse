@@ -116,8 +116,9 @@ def process(stock_list, weight,twseopen):
         
     return 'Finish'
 
-def EveryDay_Update():
+def EveryDay_Update():    
     global stock_list
+    print('Update Start')
     stock_list = Load_Stock_List('Stock_list.txt')
     
     stock_list.append('t00')
@@ -125,7 +126,7 @@ def EveryDay_Update():
 
     for item in Fail_list:
         Price[item] = goodinfo.Get_PreClose(item)
-        #print(item, Price[item])
+        print(item, Price[item])
         
     Shared = Load_shared('shared.txt')
     Weight = Calculate_Weight(Price,Shared)
@@ -134,6 +135,8 @@ def EveryDay_Update():
     Index_dict['Index'] = Price['t00']
     Index_dict['Time'] = str(datetime.datetime.now().date())
     Record_Json(Index_dict, 'Index.json')
+    print('Update Finish')
+    
     
 def Reload_parameter():
     global stock_list, Weight, Index, last_PreIndex
