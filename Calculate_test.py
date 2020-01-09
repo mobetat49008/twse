@@ -61,8 +61,9 @@ def Calculate_Weight(price, shared):
     market_value = {}
     total_market_value = 0
     for item in price:
-        market_value[item] = price[item] * shared[item]
-        total_market_value = total_market_value + market_value[item]
+        if item in shared:
+            market_value[item] = price[item] * shared[item]
+            total_market_value = total_market_value + market_value[item]
     weight = {}
     for item in market_value:
         weight[item] = market_value[item]*100/total_market_value
