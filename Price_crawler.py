@@ -32,15 +32,15 @@ def stock_price_crawler(targets):
     # 紀錄更新時間
     time = datetime.datetime.now()  
     update_time = str(time.hour)+":"+str(time.minute)+":"+str(time.second)
-   
+
     price = {}
     price['Update_Time'] = update_time 
     Fail_list = []
-    for i in range(len(targets)):
+    for i in range(len(data['msgArray'])):
         if 'z' in data['msgArray'][i]:
-            price[targets[i]] = float(data['msgArray'][i]['z'])
+            price[data['msgArray'][i]['c']] = float(data['msgArray'][i]['z'])
         else:
-            Fail_list.append(targets[i])
+            Fail_list.append(data['msgArray'][i]['c'])
     '''
     start_time = datetime.datetime.strptime(str(time.date())+'9:30', '%Y-%m-%d%H:%M')
     end_time =  datetime.datetime.strptime(str(time.date())+'13:30', '%Y-%m-%d%H:%M')
@@ -70,11 +70,11 @@ def stock_change_crawler(targets):
    
     change = {}
     change['Update_Time'] = update_time 
-    for i in range(len(targets)):
+    for i in range(len(data['msgArray'])):
         if 'msgArray' not in data:
             continue
         if 'pz' in data['msgArray'][i] and 'y' in data['msgArray'][i]:
-            change[targets[i]] = (float(data['msgArray'][i]['pz'])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
+            change[data['msgArray'][i]['c']] = (float(data['msgArray'][i]['pz'])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
         #else:
             #print(targets[i])
             
@@ -92,13 +92,10 @@ def stock_change_crawler(targets):
 
 if __name__ == '__main__':        
     # 欲爬取的股票代碼
-    stock_list = ['t00']
+    stock_list = ['2002','2330','2317','3557','2884']
 
     # 每秒定時器
     #s.enter(1, 0, stock_crawler, argument=(stock_list,))
     #s.run()
 
-    a = stock_price_crawler(stock_list)
-    print(a['Update_Time'])
-    for item in stock_list:
-        print(a[item])
+    a = stock_change_crawler(stock_list)

@@ -60,7 +60,7 @@ def Load_shared(shared_file):
 def Calculate_Weight(price, shared):
     market_value = {}
     total_market_value = 0
-    for item in shared:
+    for item in price:
         market_value[item] = price[item] * shared[item]
         total_market_value = total_market_value + market_value[item]
     weight = {}
