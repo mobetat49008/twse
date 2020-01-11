@@ -101,8 +101,7 @@ def process(stock_list, weight,twseopen):
     else:
         msg = '\n試搓指數:'+ str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
         Line_test.lineNotifyMessage(token2, msg)
-    
-    
+
     now_time = datetime.datetime.now()
     if twseopen == True: 
         start_time = datetime.datetime.strptime(str(now_time.date())+'8:30', '%Y-%m-%d%H:%M')
@@ -158,22 +157,12 @@ if __name__ == '__main__':
 
     Reload_parameter()
 
-
-    scheduler = BackgroundScheduler()  
+    scheduler = BackgroundScheduler()
     scheduler.add_job(Reload_parameter, trigger='cron', day_of_week='mon-fri', hour='08', minute="00", second="0",id='my_job_id',misfire_grace_time=30)
-    scheduler.start()
-    
-    scheduler = BackgroundScheduler()  
     scheduler.add_job(EveryDay_Update, trigger='cron', day_of_week='mon-fri', hour='21', minute="00", second="0",id='my_job_id_1',misfire_grace_time=30)
-    scheduler.start()
-
-    scheduler = BackgroundScheduler()  
     scheduler.add_job(process, args=(stock_list,Weight,1), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id_2',misfire_grace_time=30)
+    scheduler.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_3',misfire_grace_time=30)
     scheduler.start()
-    
-    scheduler1 = BackgroundScheduler()  
-    scheduler1.add_job(process, args=(stock_list,Weight,0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_3',misfire_grace_time=30)
-    scheduler1.start()
    
     while(1):
         #毫無意義#
