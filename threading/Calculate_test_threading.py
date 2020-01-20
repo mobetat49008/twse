@@ -130,7 +130,7 @@ def process(stock_list, weight, req_item, twseopen):
         end_time =  datetime.datetime.strptime(str(now_time.date())+'13:30', '%Y-%m-%d%H:%M')
         
     if now_time >= start_time and now_time <= end_time:
-        s.enter(1, 0, process, argument=(stock_list,weight,twseopen))
+        s.enter(1, 0, process, argument=(stock_list, weight, req_item, twseopen))
         s.run()
         
     return 'Finish'
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     scheduler.add_job(Reload_parameter, trigger='cron', day_of_week='mon-fri', hour='08', minute="00", second="0",id='my_job_id',misfire_grace_time=30)
     scheduler.add_job(EveryDay_Update, trigger='cron', day_of_week='mon-fri', hour='21', minute="00", second="0",id='my_job_id_1',misfire_grace_time=30)
-    scheduler.add_job(process, args=(stock_list,Weight,'pz',1), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id_2',misfire_grace_time=30)
+    scheduler.add_job(process, args=(stock_list,Weight,'pz',1), trigger='cron', day_of_week='mon-fri', hour='08', minute="39", second="0",id='my_job_id_2',misfire_grace_time=30)
     scheduler.add_job(process, args=(stock_list,Weight,'pz',0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_3',misfire_grace_time=30)
     scheduler.add_job(process, args=(stock_list,Weight,'z',0), trigger='cron', day_of_week='mon-fri', hour='13', minute="30", second="3",id='my_job_id_4',misfire_grace_time=30)
     scheduler.start()
