@@ -1,10 +1,10 @@
 #from IPython.display import display, clear_output
-from urllib.request import urlopen
+#from urllib.request import urlopen
 import datetime
 import sched
 import time as TI
 import json
-from queue import Queue
+import requests
 
 s = sched.scheduler(TI.time, TI.sleep)
 
@@ -12,7 +12,7 @@ def Repeat_Call(query_url):
     
     TI.sleep(1)
     try:
-        data = json.loads(urlopen(query_url).read().decode('utf-8'))
+        data = json.loads(requests.get(query_url).content)
     except:
         data = Repeat_Call(query_url)
     return data
@@ -26,7 +26,7 @@ def stock_price_crawler(targets):
     #　query data
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
-        data = json.loads(urlopen(query_url).read().decode('utf-8'))
+        data = json.loads(requests.get(query_url).content)
     except Exception as e:   
         print('price connect error - msg:',e)    
         data = Repeat_Call(query_url) 
@@ -60,7 +60,7 @@ def stock_change_crawler(targets, req_item, result):
     #　query data
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
-        data = json.loads(urlopen(query_url).read().decode('utf-8'))
+        data = json.loads(requests.get(query_url).content)
     except Exception as e:   
         print('change connect error - msg:',e)    
         data = Repeat_Call(query_url)
