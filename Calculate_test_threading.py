@@ -13,7 +13,7 @@ s = sched.scheduler(time.time, time.sleep)
 token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx'
 token2 = 'Vr5QUop64kp7JXpTQdAyr2dqzrnyraREB5vsg3CCxUR'
 
-urlsplitlength = 166
+urlsplitlength = 160 #166
 stock_list=None 
 Weight=None 
 Index = 12001.01
@@ -181,7 +181,7 @@ if __name__ == '__main__':
     scheduler.add_job(EveryDay_Update, trigger='cron', day_of_week='mon-fri', hour='21', minute="00", second="0",id='my_job_id_1',misfire_grace_time=30)
     scheduler.add_job(process, args=(stock_list,Weight,'pz',1), trigger='cron', day_of_week='mon-fri', hour='08', minute="30", second="0",id='my_job_id_2',misfire_grace_time=30)
     scheduler.add_job(process, args=(stock_list,Weight,'pz',0), trigger='cron', day_of_week='mon-fri', hour='13', minute="25", second="0",id='my_job_id_3',misfire_grace_time=30)
-    scheduler.add_job(process, args=(stock_list,Weight,'z',0), trigger='cron', day_of_week='mon-fri', hour='13', minute="30", second="3",id='my_job_id_4',misfire_grace_time=30)
+    scheduler.add_job(process, args=(stock_list,Weight,'z',0), trigger='cron', day_of_week='mon-fri', hour='13', minute="30", second="10",id='my_job_id_4',misfire_grace_time=30)
     scheduler.start()
    
     while(1):
