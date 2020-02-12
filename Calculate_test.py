@@ -8,7 +8,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import goodinfo
 
 s = sched.scheduler(time.time, time.sleep)
-token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx'
+token = 'kNrW93XBFwlQmDizAm1TTHrWZsTG8ZTuaWqyrN3U9s5'
+#token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx' #backup token
 token2 = 'Vr5QUop64kp7JXpTQdAyr2dqzrnyraREB5vsg3CCxUR'
 
 urlsplitlength = 166
