@@ -10,7 +10,7 @@ s = sched.scheduler(TI.time, TI.sleep)
 
 def Repeat_Call(query_url):
     
-    TI.sleep(1)
+    TI.sleep(0.5)
     try:
         data = json.loads(requests.get(query_url).content.decode('utf-8'))
     except:
