@@ -8,9 +8,14 @@ import requests
 
 s = sched.scheduler(TI.time, TI.sleep)
 
+requests.adapters.DEFAULT_RETRIES = 5
+
 def Repeat_Call(query_url):
     
     TI.sleep(0.5)
+    SS = requests.session()
+    SS.keep_alive = False
+    
     try:
         data = json.loads(requests.get(query_url).content.decode('utf-8'))
     except:
