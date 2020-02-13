@@ -9,7 +9,7 @@ s = sched.scheduler(TI.time, TI.sleep)
 
 def Repeat_Call(query_url):
     
-    TI.sleep(4)
+    TI.sleep(0.5)
     try:
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
     except:
@@ -59,7 +59,9 @@ def stock_change_crawler(targets):
     #　query data
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
+        #response = urlopen(query_url)
         data = json.loads(urlopen(query_url).read().decode('utf-8'))
+        #response.close()
     except Exception as e:   
         print('change connect error - msg:',e)    
         data = Repeat_Call(query_url)
