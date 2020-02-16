@@ -9,15 +9,15 @@ import requests
 s = sched.scheduler(TI.time, TI.sleep)
 
 requests.adapters.DEFAULT_RETRIES = 5
+SS = requests.session()
 
 def Repeat_Call(query_url):
-    
+    print('retry...')
     TI.sleep(0.5)
-    SS = requests.session()
-    SS.keep_alive = False
+
     
     try:
-        data = json.loads(requests.get(query_url).content.decode('utf-8'))
+        data = json.loads(SS.get(query_url).content.decode('utf-8'))
     except:
         data = Repeat_Call(query_url)
     return data
@@ -31,7 +31,7 @@ def stock_price_crawler(targets):
     #　query data
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
-        data = json.loads(requests.get(query_url).content.decode('utf-8'))
+        data = json.loads(SS.get(query_url).content.decode('utf-8'))
     except Exception as e:   
         print('price connect error - msg:',e)    
         data = Repeat_Call(query_url) 
@@ -65,7 +65,7 @@ def stock_change_crawler(targets, req_item, result):
     #　query data
     query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
-        data = json.loads(requests.get(query_url).content.decode('utf-8'))
+        data = json.loads(SS.get(query_url).content.decode('utf-8'))
     except Exception as e:   
         print('change connect error - msg:',e)    
         data = Repeat_Call(query_url)
