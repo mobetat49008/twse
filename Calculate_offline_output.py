@@ -141,20 +141,21 @@ def process(stock_list, weight, req_item):
     end_time =  datetime.datetime.strptime(str(now_time.date())+'9:00', '%Y-%m-%d%H:%M')
     if now_time >= start_time and now_time <= end_time:
         req_item = 'pz'
-    start_time = datetime.datetime.strptime(str(now_time.date())+'13:25', '%Y-%m-%d%H:%M')
-    end_time =  datetime.datetime.strptime(str(now_time.date())+'13:30', '%Y-%m-%d%H:%M')
-    if now_time >= start_time and now_time <= end_time:
-        req_item = 'pz'
     else:
-        req_item = 'z'       
+        start_time = datetime.datetime.strptime(str(now_time.date())+'13:25', '%Y-%m-%d%H:%M')
+        end_time =  datetime.datetime.strptime(str(now_time.date())+'13:30', '%Y-%m-%d%H:%M')
+        if now_time >= start_time and now_time <= end_time:
+            req_item = 'pz'
+        else:
+            req_item = 'z'      
 
-    window.after(500,process, stock_list, weight, req_item)
+    window.after(1000,process, stock_list, weight, req_item)
         
     return 'Finish'
 
 def Show_process(stock_list, weight, req_item, twseopen):
     print('start')
-    window.after(500,process, stock_list, weight, req_item, twseopen)
+    window.after(1000,process, stock_list, weight, req_item, twseopen)
     
     return
 
@@ -201,12 +202,13 @@ def Start_process():
     end_time =  datetime.datetime.strptime(str(now_time.date())+'9:00', '%Y-%m-%d%H:%M')
     if now_time >= start_time and now_time <= end_time:
         req_item = 'pz'
-    start_time = datetime.datetime.strptime(str(now_time.date())+'13:25', '%Y-%m-%d%H:%M')
-    end_time =  datetime.datetime.strptime(str(now_time.date())+'13:30', '%Y-%m-%d%H:%M')
-    if now_time >= start_time and now_time <= end_time:
-        req_item = 'pz'
     else:
-        req_item = 'z' 
+        start_time = datetime.datetime.strptime(str(now_time.date())+'13:25', '%Y-%m-%d%H:%M')
+        end_time =  datetime.datetime.strptime(str(now_time.date())+'13:30', '%Y-%m-%d%H:%M')
+        if now_time >= start_time and now_time <= end_time:
+            req_item = 'pz'
+        else:
+            req_item = 'z' 
     process(stock_list,Weight,req_item)
     return
 
