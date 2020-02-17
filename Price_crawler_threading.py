@@ -13,9 +13,7 @@ SS = requests.session()
 
 def Repeat_Call(query_url):
     print('retry...')
-    TI.sleep(0.5)
-
-    
+    TI.sleep(0.5)    
     try:
         data = json.loads(SS.get(query_url).content.decode('utf-8'))
     except:
