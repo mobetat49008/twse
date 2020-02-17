@@ -63,7 +63,7 @@ def stock_change_crawler(targets, req_item, result):
     stock_list = '|'.join('tse_{}.tw'.format(target) for target in targets) 
     #stock_list = stock_list + '|'.join('otc_{}.tw'.format(target) for target in targets)     
     #　query data
-    query_url = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
+    query_url = "http://122.147.34.179/stock/api/getStockInfo.jsp?ex_ch="+ stock_list
     try:
         data = json.loads(SS.get(query_url).content.decode('utf-8'))
     except Exception as e:   

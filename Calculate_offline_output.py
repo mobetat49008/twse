@@ -48,6 +48,7 @@ def Get_Price(stock_list):
 
 def Get_change(stock_list, req_item):
     change = {}
+
     threads = []
     result = Queue()
     for i in range(len(stock_list)//urlsplitlength +1):
@@ -61,7 +62,13 @@ def Get_change(stock_list, req_item):
     for i in range(len(stock_list)//urlsplitlength +1):
         small_change = result.get()
         change = {**change, **small_change}
-
+    '''
+    for i in range(len(stock_list)//urlsplitlength +1):
+        small_stock_list = stock_list[i*urlsplitlength:min(len(stock_list),(i+1)*urlsplitlength)]
+        small_change = Pc.stock_change_crawler(small_stock_list)
+        change = {**change, **small_change}
+        print(i)
+    '''
     return change
 
 def Load_shared(shared_file):
@@ -120,6 +127,7 @@ def process(stock_list, weight, req_item):
         IND = '\n現貨試算指數:'
     else:
         return 'Input Error'
+    print('Request...',datetime.datetime.now())
     
     Change = Get_change(stock_list, req_item)
     P = Calculate_percent(Change, weight)
@@ -149,15 +157,11 @@ def process(stock_list, weight, req_item):
         else:
             req_item = 'z'      
 
-    window.after(1000,process, stock_list, weight, req_item)
+    #window.after(1000,process, stock_list, weight, req_item)
+    process(stock_list,weight,req_item)
         
     return 'Finish'
 
-def Show_process(stock_list, weight, req_item, twseopen):
-    print('start')
-    window.after(1000,process, stock_list, weight, req_item, twseopen)
-    
-    return
 
 def EveryDay_Update():    
     global stock_list
@@ -209,7 +213,9 @@ def Start_process():
             req_item = 'pz'
         else:
             req_item = 'z' 
-    process(stock_list,Weight,req_item)
+    #process(stock_list,Weight,req_item)
+    t = threading.Thread(target=process, args=(stock_list,Weight,req_item))
+    t.start()
     return
 
 
