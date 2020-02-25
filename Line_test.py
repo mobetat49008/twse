@@ -8,8 +8,12 @@ def lineNotifyMessage(token, msg):
     }
 	
     payload = {'message': msg}
-    r = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
-    return r.status_code
+    try:
+        r = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
+    except Exception as e:   
+        print('Line notify error - msg:',e)
+        print(msg)    
+    return
 
 '''
 NOW = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')	
