@@ -13,6 +13,7 @@ s = sched.scheduler(time.time, time.sleep)
 token = 'kNrW93XBFwlQmDizAm1TTHrWZsTG8ZTuaWqyrN3U9s5'
 #token = 'I5HvbkSz66CZ7RL3k2BkXmvMcNVLdib0J8fSPIvq3dx' #backup token
 token2 = 'Vr5QUop64kp7JXpTQdAyr2dqzrnyraREB5vsg3CCxUR'
+Today_file = 'PreIndex_tick_data/' + str(datetime.datetime.now().date())+'_tick_data.json'
 
 urlsplitlength = 160 #166
 stock_list=None 
@@ -90,6 +91,13 @@ def Read_Json(file_name):
     with open(file_name,"r", encoding='utf-8') as file:
         data = json.load(file)
         return data
+    
+def Record_Tick_Json(Dict, save_name):
+    file = open(save_name,'a+')
+    json.dump(Dict,file)
+    file.write('\n')
+    file.close()
+    return
 
 def Calculate_percent(change, weight):
     percent = 0
@@ -113,14 +121,18 @@ def process(stock_list, weight, req_item, twseopen):
     Premarket = Index*P/100
     PreIndex = Index + Premarket   
     
-    
-    if abs(last_PreIndex - PreIndex)>1:
-        msg = IND + str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
+    msg = IND + str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
+    if abs(last_PreIndex - PreIndex)>1:        
         Line_test.lineNotifyMessage(token, msg)
         last_PreIndex = PreIndex
     else:
-        msg = IND + str('%.2f'%PreIndex) + '\n漲跌點數:' + str('%.2f'%Premarket)+'\n漲跌幅:'+ str('%.3f'%P) + '% \n資料時間：' + Change['Update_Time']
         Line_test.lineNotifyMessage(token2, msg)
+        
+    tick_data = {}
+    tick_data['PreIndex'] = round(PreIndex, 2)
+    tick_data['Change'] = round(Premarket, 2)
+    tick_data['Time'] = Change['Update_Time']
+    Record_Tick_Json(tick_data, Today_file)
 
     now_time = datetime.datetime.now()
     if twseopen == True: 
@@ -159,12 +171,13 @@ def EveryDay_Update():
     
     
 def Reload_parameter():
-    global stock_list, Weight, Index, last_PreIndex
+    global stock_list, Weight, Index, last_PreIndex, Today_file
     stock_list = Load_Stock_List('Stock_list.txt')
     Weight = Read_Json('Weight.json')
     Index_dict = Read_Json('Index.json')
     Index = Index_dict['Index']
     last_PreIndex = Index
+    Today_file = 'PreIndex_tick_data/' + str(datetime.datetime.now().date())+'_tick_data.json'
     
 def TWSE_Update():
     twse_close = Pc.stock_price_crawler(['t00'])
