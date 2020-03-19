@@ -143,7 +143,7 @@ def process(stock_list, weight, req_item, twseopen):
         end_time =  datetime.datetime.strptime(str(now_time.date())+'13:30', '%Y-%m-%d%H:%M')
         
     if now_time >= start_time and now_time <= end_time:
-        time.sleep(30)
+        time.sleep(20)
         s.enter(1, 0, process, argument=(stock_list, weight, req_item, twseopen))
         s.run()
         
