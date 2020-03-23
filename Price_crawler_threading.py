@@ -42,7 +42,10 @@ def stock_price_crawler(targets):
     Fail_list = []
     for i in range(len(data['msgArray'])):
         if 'z' in data['msgArray'][i]:
-            price[data['msgArray'][i]['c']] = float(data['msgArray'][i]['z'])
+            if data['msgArray'][i]['z'] != '-':
+                price[data['msgArray'][i]['c']] = float(data['msgArray'][i]['z'])
+            else:
+                Fail_list.append(data['msgArray'][i]['c'])
         else:
             Fail_list.append(data['msgArray'][i]['c'])
     '''
