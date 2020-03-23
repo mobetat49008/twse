@@ -78,7 +78,8 @@ def stock_change_crawler(targets, req_item, result):
         if 'msgArray' not in data:
             continue
         if req_item in data['msgArray'][i] and 'y' in data['msgArray'][i]:
-            change[data['msgArray'][i]['c']] = (float(data['msgArray'][i][req_item])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
+            if data['msgArray'][i][req_item] != '-':
+                change[data['msgArray'][i]['c']] = (float(data['msgArray'][i][req_item])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
         #else:
             #print(targets[i])
             
