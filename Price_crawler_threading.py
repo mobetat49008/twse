@@ -83,8 +83,10 @@ def stock_change_crawler(targets, req_item, result):
         if req_item in data['msgArray'][i] and 'y' in data['msgArray'][i]:
             if data['msgArray'][i][req_item] != '-':
                 change[data['msgArray'][i]['c']] = (float(data['msgArray'][i][req_item])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
-            elif data['msgArray'][i]['oz'] != '-':
-                change[data['msgArray'][i]['c']] = (float(data['msgArray'][i]['oz'])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
+            elif 'oz' in data['msgArray'][i]:
+                if data['msgArray'][i]['oz'] != '-':
+                    change[data['msgArray'][i]['c']] = (float(data['msgArray'][i]['oz'])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
+
         #else:
             #print(targets[i])
             
