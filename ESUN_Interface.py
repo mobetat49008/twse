@@ -57,7 +57,7 @@ def stock_change_crawler(targets, req_item, result):
     change['Update_Time'] = update_time 
     for i in range(len(data['msgArray'])):
         if req_item in data['msgArray'][i] and 'y' in data['msgArray'][i]:
-            if data['msgArray'][i][req_item] != None and data['msgArray'][i][req_item] != '--':
+            if data['msgArray'][i][req_item] != None and data['msgArray'][i][req_item] != '--' and data['msgArray'][i]['y'] != None:
                 change[data['msgArray'][i]['c']] = (float(data['msgArray'][i][req_item])-float(data['msgArray'][i]['y']))*100/float(data['msgArray'][i]['y'])
             
     result.put(change)
